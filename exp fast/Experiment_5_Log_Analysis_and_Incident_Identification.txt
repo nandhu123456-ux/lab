@@ -1,0 +1,112 @@
+Experiment 5
+Log Analysis and Incident Identification
+2.1 What is Log Analysis?
+Log analysis means reading recorded system events to understand what happened, when it happened, who was involved, and whether the activity is normal or suspicious. A single line may look harmless, but several related lines can reveal a complete incident sequence.
+2.2 Important Authentication Evidence
+Item | Easy explanation
+Timestamp | When the event occurred. Use it to place events in order.
+Hostname | Which machine produced the event.
+Service and PID | For example sshd[2290], meaning the SSH service process.
+Username | The account that was targeted or used.
+Source IP | Where the login request came from.
+Result | Failed, accepted, session opened, or session closed.
+
+2.3 What Counts as an Anomaly?
+Many failed attempts from one IP address.
+Attempts using usernames that do not exist.
+A successful login immediately after repeated failures.
+Successful access outside expected working hours.
+A new or unexpected source IP address.
+Several usernames tested from the same source IP.
+Aim
+Analyze Kali Linux authentication logs to identify failed logins, successful access, unusual login times, repeated source IP activity, and correlated security events.
+Safety: Use only your own Kali VM with NAT or Host-only networking. Keep all SSH tests on 127.0.0.1. Enter only three wrong passwords manually; do not use brute-force or password-cracking tools.
+
+1. Confirm the system and log source
+whoami && hostname && date -Is / test -f /var/log/auth.log && echo 'auth.log available' || echo 'Use journalctl' / sudo journalctl -u ssh.service -n 5 --no-pager
+
+2. Start SSH and create a temporary user
+sudo systemctl enable --now ssh / sudo adduser loglab
+
+Create a temporary password that is used only for this lab.
+3. Generate three failed loginssud
+ssh loglab@127.0.0.1
+
+Enter an incorrect password three times. The connection should end with Permission denied.
+4. Find and confirm failed login events
+sudo grep -Ei 'Failed password|Invalid user|authentication failure' /var/log/auth.log | tail -n 20
+
+Cross-check: The same failed attempts should appear in the SSH journal and usually in /var/log/btmp through lastb.
+
+5. if Auth.log does not Exits then journalctl
+sudo journalctl -u ssh.service --since '-30 min' -o short-iso --no-pager | grep -Ei 'Failed password|Invalid user|authentication failure'
+
+6. check lastb
+sudo last -Fai | head -n 20
+
+No output means no accepted SSH login was found outside the selected working hours.
+7. Generate a successful login
+ssh loglab@127.0.0.1
+
+8. Check last
+last --time-format iso -i | head -n 20
+
+9. Find Accepted SSH Logins
+sudo grep -E 'Accepted (password|publickey)' /var/log/auth.log | tail -n 10 / exit
+
+10. Check unusual login times
+var/log/auth.log | tail -n 10
+ssh loglab@127.0.0.1
+sudo journalctl -u ssh.service --since '-7 days' -o short-iso --no-pager | \
+awk '/Accepted (password|publickey)/ {
+split($1,a,"T");
+split(a[2],b,":");
+hour=b[1]+0;
+if (hour < 8 || hour >= 18) print
+}'
+11. Count failed attempts by IP
+sudo journalctl -u ssh.service --since '-1 hour' --no-pager | \
+grep 'Failed password' | \
+awk '{for(i=1;i<=NF;i++) if($i=="from") print $(i+1)}' | \
+sort | uniq -c | sort -nr
+12. Create the SSH timeline
+sudo journalctl -u ssh.service --since '-30 min' -o short-iso --no-pager | \
+grep -E 'Failed password|Accepted (password|publickey)|session opened|session closed' | \
+tee ~/ssh_event_timeline.txt
+13. Save evidence
+sudo journalctl -u ssh.service --since '-1 hour' -o short-iso --no-pager > ~/ssh_lab_evidence.txt
+Correlation check | Record from your output
+Same username? | ____________________________
+Same source IP? | ____________________________
+Time between failure and success? | ____________________________
+Inside 08:00-18:00? | ____________________________
+
+14. Cleanup
+sudo deluser --remove-home loglab / # Run the next command only if SSH was enabled solely for this lab: / sudo systemctl disable --now ssh
+
+Expected result
+• Failed password events are visible in journalctl or auth.log.
+• lastb confirms the bad-login records, while last confirms the successful session.
+• The timeline connects timestamp, username, source IP, and outcome.
+• The evidence file and its SHA-256 hash are created successfully.
+Result: The experiment passes when failed and accepted SSH events are identified, correlated, recorded in the worksheet, and preserved with a hash.
+
+Short viva questions
+Q. What is /var/log/auth.log?
+A. A text log containing authentication and authorization events when rsyslog is configured to write it.
+Q. What does lastb read?
+A. /var/log/btmp, which stores bad login attempts.
+Q. What does last read?
+A. /var/log/wtmp, which stores successful login and session records.
+Q. Why is the timestamp important?
+A. It places events in order and helps decide whether they are part of the same incident.
+Q. What is event correlation?
+A. Connecting separate log entries using common details such as time, user, IP address, and service.
+Q. Does one failed login prove an attack?
+A. No. It may be a typing mistake. Repetition, timing, source, and later activity must be considered.
+Q. Why is a successful login after failures important?
+A. It may indicate that password guessing eventually succeeded, although it can also be a legitimate user correcting a mistake.
+Q. Why use journalctl?
+A. It reads the systemd journal and can filter by service, time, priority, and other fields.
+Q. Why create a hash of evidence?
+A. To provide a fingerprint that helps demonstrate whether the saved file changed.

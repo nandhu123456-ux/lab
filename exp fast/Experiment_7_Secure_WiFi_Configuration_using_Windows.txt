@@ -1,0 +1,104 @@
+EXPERIMENT – 7
+Secure Wi-Fi Configuration using Windows
+Aim
+To configure a wireless router securely by changing default settings, configuring neutral SSIDs, enabling WPA2/WPA3 security, disabling WPS, and verifying authentication and encryption parameters using Windows CLI commands.
+Requirements
+Wireless router / 4G router or Wi-Fi simulator
+Windows 10/11 computer with Wi-Fi adapter
+Web browser (Chrome, Edge)
+Command Prompt (cmd)
+Authorized router administrator credentials
+Safety Warning: Perform this experiment only on an authorized router or network simulator. If using a physical 4G router, do not modify mobile APN or SIM settings. Maintain an active wired connection or keep default credentials accessible to avoid lockouts.
+
+Procedure
+1. Identify Router IP Address
+Open Command Prompt and execute:
+ipconfig
+
+Locate the Default Gateway address in the output.
+Expected Output:
+Wireless LAN adapter Wi-Fi: /  /    Connection-specific DNS Suffix  . : Home /    IPv4 Address. . . . . . . . . . . : 192.168.8.100 /    Subnet Mask . . . . . . . . . . . : 255.255.255.0 /    Default Gateway . . . . . . . . . : 192.168.8.1
+
+2. Access Router Configuration Page
+Open a web browser and enter the Default Gateway IP into the address bar:
+http://192.168.8.1
+Log in using authorized administrator credentials.
+3. Configure Administrator Password
+Navigate to System / Management Settings and change the factory default administrator password. Set a strong password that is strictly different from the Wi-Fi passphrase.
+4. Change the Wireless Network Name (SSID)
+1. Open Wireless > Basic Settings.
+2. Change the default SSID to a neutral name such as CampusLab-Secure.
+3. For a dual-band router, configure both 2.4 GHz and 5 GHz SSIDs. They may use the same name or separate names such as CampusLab-Secure-5G.
+4. Do not include a person’s full name, address, phone number, organisation password, or router model in the SSID.
+5. Keep SSID broadcast enabled unless the laboratory specifically requires otherwise. Hiding an SSID is not a strong security control.
+5. Configure WPA2/WPA3 Security & Encryption
+Navigate to Wireless > Security Settings. Select WPA2/WPA3-Personal as the security mode, choose AES / CCMP encryption, and set a strong Wi-Fi passphrase.
+6. Disable WPS (Wi-Fi Protected Setup)
+1. Open Wireless > WPS, Advanced Wireless, or Wi-Fi Protected Setup.
+2. Set WPS to Disabled.
+3. Confirm that both the WPS PIN method and push-button method are off, when separate controls are shown.
+4. Click Save.
+Summary of Wireless Security Configurations
+Setting | Value | Meaning
+SSID Name | CampusLab-Secure | Neutral identifier without sensitive information
+Security Mode | WPA2/WPA3-Personal | Secure authentication protocol
+Encryption | AES / CCMP | High-level robust data encryption
+WPS Status | Disabled (PIN & Push-button) | Prevents brute-force PIN attacks
+
+Save the settings and allow the router to reboot wireless services.
+7. Verify Hardware WPA2/WPA3 & AES Support
+Verify that the Wi-Fi network interface driver supports WPA2-Personal, WPA3-Personal, and AES (CCMP) encryption:
+netsh wlan show drivers
+
+Expected Output:
+Interface name: Wi-Fi /  /     Driver                   : Intel(R) Wi-Fi 6 AX201 160MHz /     Provider                 : Intel /     Authentication and cipher supported in infrastructure mode: /         Open             None /         Open             WEP-40 /         WPA2-Personal    CCMP /         WPA3-Personal    CCMP /         WPA2-Enterprise  CCMP /     Management Frame Protection supported : Yes
+
+8. Scan & Verify Available Wireless Networks
+Scan for broadcast networks to verify that the router is broadcasting the neutral SSID with WPA2/WPA3 authentication and CCMP cipher:
+netsh wlan show networks mode=bssid
+
+Expected Output:
+Interface name : Wi-Fi / There are 1 networks currently available. /  / SSID 1 : CampusLab-Secure /     Network type            : Infrastructure /     Authentication          : WPA2-Personal /     Encryption              : CCMP /     BSSID 1                 : e8:48:b8:12:34:56 /          Signal             : 98% /          Radio type         : 802.11ax /          Channel            : 6
+
+9. Inspect Saved Profile Security Settings
+Connect the Windows PC to CampusLab-Secure, then inspect the saved profile's authentication mode, cipher, and security key status:
+netsh wlan show profile name="CampusLab-Secure" key=clear
+
+Expected Output:
+Profile CampusLab-Secure on interface Wi-Fi: / ======================================================================= / Profile Settings / ---------------- /     Version                : 1 /     Type                   : Wireless LAN /     Name                   : CampusLab-Secure /     Control options        : Connect automatically / Security settings / ----------------- /     Authentication         : WPA2-Personal /     Cipher                 : CCMP /     Security key           : Present /     Key Content            : SecurePass123!
+
+10. Verify Active Connection Parameters
+Verify active real-time connection status and encryption parameters:
+netsh wlan show interfaces
+
+Expected Output:
+There is 1 interface on the system: /  /     Name                   : Wi-Fi /     Description            : Intel(R) Wi-Fi 6 AX201 160MHz /     State                  : connected /     SSID                   : CampusLab-Secure /     BSSID                  : e8:48:b8:12:34:56 /     Network type           : Infrastructure /     Radio type             : 802.11ax /     Authentication         : WPA2-Personal /     Cipher                 : CCMP /     Channel                : 6 /     Receive rate (Mbps)    : 574 /     Transmit rate (Mbps)   : 574 /     Signal                 : 98%
+
+Verification
+Test / Command | Expected Result | Status
+ipconfig | Default Gateway IP displayed | Pass
+Admin Password Change | Default admin password updated securely | Pass
+SSID Configuration | Neutral SSID configured & broadcast enabled | Pass
+WPS Status Check | PIN and Push-button WPS disabled in router portal | Pass
+netsh wlan show drivers | WPA2/WPA3 and CCMP (AES) supported | Pass
+netsh wlan show interfaces | State connected with CCMP cipher | Pass
+
+Precautions
+Perform the experiment only on authorized routers or network simulators.
+Do not include personal information, phone numbers, or router models in the SSID.
+Keep SSID broadcast enabled unless specifically required otherwise.
+Ensure both PIN and push-button WPS methods are completely disabled.
+Do not use obsolete or weak security protocols such as WEP, WPA, or TKIP.
+Keep administrator and Wi-Fi passwords strictly different.
+Do not interrupt router power during saving settings or rebooting.
+If using a physical 4G router, do not modify APN or mobile SIM data settings.
+Result
+The wireless router was successfully configured with a neutral SSID, secure authentication (WPA2/WPA3), AES encryption, disabled WPS (PIN and push-button methods), and verified using Windows network diagnostic commands.
+The experiment is successful if:
+Router IP address is identified using ipconfig.
+Default administrator password is changed to a strong password.
+SSID is set to a neutral name (e.g., CampusLab-Secure) without personal information.
+SSID broadcast remains enabled as per security best practices.
+Both WPS PIN and push-button methods are set to Disabled.
+Security mode is set to WPA2/WPA3-Personal with AES / CCMP encryption.
+Active connection status and CCMP cipher are confirmed via netsh wlan show interfaces.
