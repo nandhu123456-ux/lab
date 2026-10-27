@@ -1,0 +1,30 @@
+SHA-512 — SECURE HASH ALGORITHM 512
+
+Definition
+SHA-512 is a cryptographic hash function in the SHA-2 family. It accepts input of variable length and produces a fixed 512-bit digest (64 bytes), usually displayed as 128 hexadecimal characters.
+
+How it works
+1. The input message is encoded as bytes.
+2. Padding and a length field are added according to the SHA-512 specification.
+3. The message is processed in 1024-bit blocks through a series of compression rounds.
+4. The final result is the 512-bit hash digest.
+
+Important properties
+- One-way: the hash is not designed to be decrypted back into the original message.
+- Deterministic: the same input always produces the same hash.
+- Fixed output length: every input produces a 512-bit digest.
+- Avalanche effect: a small input change should cause a large, unpredictable change in the digest.
+- SHA-512 can support integrity checking and digital-signature systems, but a plain hash alone does not authenticate who sent the data.
+- Do not store passwords as plain SHA-512 hashes. Use a password-hashing function such as Argon2id, scrypt, or bcrypt with suitable parameters.
+
+Python example
+import hashlib
+message = input("Enter message: ")
+digest = hashlib.sha512(message.encode()).hexdigest()
+print("SHA-512:", digest)
+
+Viva answers
+Q: Is SHA-512 encryption or hashing? A: Hashing.
+Q: Can it be decrypted? A: No; it is designed to be one-way.
+Q: What is its output size? A: 512 bits = 64 bytes = 128 hexadecimal characters.
+Q: Does hashing require a secret key? A: Plain SHA-512 does not use a secret key.

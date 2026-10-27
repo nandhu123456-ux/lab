@@ -1,0 +1,24 @@
+DIFFIE–HELLMAN KEY EXCHANGE
+
+Definition
+Diffie–Hellman is a public-key key-agreement method that lets two parties calculate the same shared secret over a public channel without sending the secret itself.
+
+How it works
+1. Alice and Bob publicly agree on a large prime p and generator g.
+2. Alice chooses private value a; Bob chooses private value b. They keep these secret.
+3. Alice computes public value A = g^a mod p.
+4. Bob computes public value B = g^b mod p.
+5. They exchange A and B.
+6. Alice computes S = B^a mod p; Bob computes S = A^b mod p.
+7. Both obtain the same secret: g^(ab) mod p.
+
+Important points
+- Diffie–Hellman is a key-exchange/key-agreement method, not a direct message-encryption algorithm.
+- The shared secret is normally passed through a key-derivation function before use as an encryption key.
+- Plain, unauthenticated Diffie–Hellman is vulnerable to a man-in-the-middle attack. Authentication (for example, digital signatures or certificates) is needed to prevent impersonation.
+- Real systems use appropriately large, secure parameters; tiny classroom numbers are only demonstrations.
+
+Viva answers
+Q: What is exchanged? A: Public values, not the private keys or final shared secret.
+Q: Why do both parties get the same secret? A: Both calculate g^(ab) modulo p.
+Q: Does Diffie–Hellman authenticate users by itself? A: No.

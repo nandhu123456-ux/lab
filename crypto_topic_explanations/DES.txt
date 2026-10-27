@@ -1,0 +1,23 @@
+DES — DATA ENCRYPTION STANDARD
+
+Definition
+DES is a symmetric-key block cipher that transforms data in 64-bit blocks. Its effective key length is 56 bits; the stored key is 64 bits including parity bits.
+
+How it works
+1. Apply an initial permutation to the 64-bit input block.
+2. Split the block into two 32-bit halves.
+3. Perform 16 Feistel rounds using round keys derived from the main key.
+4. Combine the halves and apply the final permutation to produce ciphertext.
+5. Decryption uses the same overall structure with the round keys applied in reverse order.
+
+Important points
+- DES is symmetric: the same secret key is used for encryption and decryption.
+- Block size = 64 bits; effective key size = 56 bits; number of rounds = 16.
+- Its key is too short to resist modern brute-force attacks, so DES is insecure and should not be used for real protection.
+- AES replaced DES for modern use. Triple DES was a historical transition, but it is also being retired.
+
+Viva answers
+Q: Is DES a block or stream cipher? A: Block cipher.
+Q: How many rounds? A: 16.
+Q: What is DES's effective key size? A: 56 bits.
+Q: Why is DES insecure today? A: Its effective key is too short.

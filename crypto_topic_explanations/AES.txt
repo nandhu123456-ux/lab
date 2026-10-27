@@ -1,0 +1,30 @@
+AES — ADVANCED ENCRYPTION STANDARD
+
+Definition
+AES is a symmetric block cipher used to protect digital information. It processes 128-bit blocks and supports keys of 128, 192, or 256 bits.
+
+How it works
+AES arranges each 128-bit block into a state and applies rounds of transformations:
+- SubBytes: substitutes each byte using an S-box.
+- ShiftRows: shifts rows of the state.
+- MixColumns: mixes bytes within each column (not used in the final round).
+- AddRoundKey: combines the state with a round key using XOR.
+Key expansion derives the round keys from the original key.
+
+Number of rounds
+- AES-128: 10 rounds.
+- AES-192: 12 rounds.
+- AES-256: 14 rounds.
+
+Important points
+- AES is symmetric: the same secret key is used for encryption and decryption.
+- Block size is always 128 bits, independent of key size.
+- AES is widely used and considered secure when correctly implemented with a suitable mode and key management.
+- Authenticated modes such as GCM are generally preferred because they provide confidentiality and integrity. Nonces must be managed correctly.
+
+Viva answers
+Q: Is AES a block or stream cipher? A: Block cipher.
+Q: What is the block size? A: 128 bits.
+Q: Which key sizes are supported? A: 128, 192, and 256 bits.
+Q: How many rounds does AES-128 use? A: 10.
+Q: What is the difference between AES and DES? A: AES uses a 128-bit block and larger key options; DES uses 64-bit blocks and a 56-bit effective key.

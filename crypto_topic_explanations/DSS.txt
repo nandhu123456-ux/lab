@@ -1,0 +1,27 @@
+DSS — DIGITAL SIGNATURE STANDARD
+
+Definition
+DSS is a standard for creating and verifying digital signatures. It defines approved digital-signature algorithms; DSA is the original algorithm associated with the standard, while later versions of the standard include other algorithms.
+
+Purpose
+A digital signature helps a receiver check:
+- Authentication: the signature was produced by the holder of the signing private key.
+- Integrity: changes to the signed message cause verification to fail.
+- Non-repudiation support: signatures can provide evidence of signing, subject to key control and legal/contextual requirements.
+
+How signing and verification work
+1. The sender computes a cryptographic hash of the message as part of the signature process.
+2. The sender creates a signature using the private signing key.
+3. The receiver uses the corresponding public key and the received message to verify the signature.
+4. Verification succeeds only if the signature is valid for that message and key.
+
+Important points
+- DSS is for digital signatures, not for encrypting the message.
+- The private key signs; the public key verifies.
+- A digital signature does not automatically hide the message contents. Use encryption separately if confidentiality is required.
+- In Python, the cryptography library can demonstrate DSA signatures, but current applications should follow modern standards and use maintained libraries.
+
+Viva answers
+Q: Does a digital signature provide confidentiality? A: No, not by itself.
+Q: Which key is used to sign? A: Private key.
+Q: Which key verifies? A: Public key.

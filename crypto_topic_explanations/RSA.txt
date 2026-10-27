@@ -1,0 +1,31 @@
+RSA — Rivest–Shamir–Adleman
+
+Definition
+RSA is an asymmetric public-key cryptographic algorithm. It uses a public key and a mathematically related private key.
+
+Main purpose
+- Encryption: a sender can encrypt data using the recipient's public key; the recipient decrypts it using the private key.
+- Digital signatures: the private key signs; the public key verifies.
+
+Basic key-generation idea
+1. Choose two large prime numbers p and q.
+2. Calculate n = p × q.
+3. Calculate φ(n) = (p − 1)(q − 1).
+4. Choose e such that gcd(e, φ(n)) = 1.
+5. Calculate d such that (e × d) mod φ(n) = 1.
+6. Public key = (e, n); private key = (d, n).
+
+Core formulas
+Encryption: C = M^e mod n
+Decryption: M = C^d mod n
+Here M is the message represented as a number and C is the ciphertext number.
+
+Important points
+- RSA is asymmetric; it does not use the same key for encryption and decryption.
+- Real implementations require secure padding, such as RSA-OAEP for encryption and RSA-PSS for signatures. Textbook RSA alone is not safe for real use.
+- RSA is generally used to protect small data or key material, not to encrypt large files directly.
+
+Viva answers
+Q: Why is RSA called asymmetric? A: It uses a public key and a private key.
+Q: Can the public key be shared? A: Yes; the private key must remain secret.
+Q: What is modular exponentiation? A: Raising a number to a power and taking the remainder modulo n.

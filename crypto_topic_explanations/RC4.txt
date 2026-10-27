@@ -1,0 +1,25 @@
+RC4 — Rivest Cipher 4
+
+Definition
+RC4 is a symmetric stream cipher. It generates a pseudorandom keystream and combines it with the message using XOR.
+
+How it works
+1. Key Scheduling Algorithm (KSA): initializes and permutes an array of 256 byte values using the key.
+2. Pseudorandom Generation Algorithm (PRGA): updates the state and generates one keystream byte at a time.
+3. Encryption: ciphertext byte = plaintext byte XOR keystream byte.
+4. Decryption: plaintext byte = ciphertext byte XOR the same keystream byte.
+
+Core formula
+C = P XOR K
+P = C XOR K
+XOR reverses itself when the same keystream is applied again.
+
+Important points
+- RC4 is symmetric and a stream cipher, unlike AES and DES, which are block ciphers.
+- The same key is used to encrypt and decrypt.
+- RC4 has serious statistical weaknesses and is deprecated; do not use it in modern applications. It is studied mainly for historical and educational purposes.
+
+Viva answers
+Q: What do KSA and PRGA mean? A: Key Scheduling Algorithm and Pseudorandom Generation Algorithm.
+Q: Does RC4 encrypt fixed-size blocks? A: No; it generates a stream of bytes.
+Q: Is RC4 secure today? A: No, it has known weaknesses and should not be used.
